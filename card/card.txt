@@ -892,23 +892,18 @@ custom_fields:
                           text-align: left;
                         }
                     content: >
-                      {% set active =
-                      state_attr('sensor.lista_sensori_allarme_globale','sensor_active')%}
+                      {% set active = 
+                      (expand('group.list_sensor_alarm_global_active')|map(attribute='entity_id')|list)%} 
+                      {% set trigger = 
+                      (expand('group.list_sensor_alarm_global')|rejectattr('entity_id','in',active)|map(attribute='entity_id')|list)%} 
+                      {%for triggers in trigger %} 
 
-                      {% set trigger =
-                      (expand('group.list_sensor_alarm_global')|rejectattr('entity_id','in',active)|map(attribute='entity_id')|list)%}
-
-                      {%for triggers in trigger %}**{{states[triggers].name}}**
-                      DISATTIVATO
-
-                      {%endfor%}
-
+                      **{{states[triggers].name}}**  DISATTIVATO {%endfor%} 
                       {%-set trigger =
-                      expand('group.list_sensor_alarm_global')|map(attribute='entity_id')|list%}
-                      {% for entity in trigger if entity in
-                      state_attr('sensor.lista_sensori_allarme_globale','sensor_active')%}
-                      **{{states[entity].name}}:**  {{states[entity].state}} 
+                      expand('group.list_sensor_alarm_global')|map(attribute='entity_id')|list%} 
+                      {% for entity in trigger if entity in active%} 
 
+                      **{{states[entity].name}}:**  {{states[entity].state}}  
                       {%endfor%}
   sensor_night:
     card:
@@ -965,20 +960,15 @@ custom_fields:
                         }
                     content: >-
                       {% set active =
-                      state_attr('sensor.lista_sensori_allarme_notte','sensor_active')%}
-
+                      (expand('group.list_sensor_alarm_night_active')|map(attribute='entity_id')|list)%} 
                       {% set trigger =
-                      (expand('group.list_sensor_alarm_night')|rejectattr('entity_id','in',active)|map(attribute='entity_id')|list)%}
+                      (expand('group.list_sensor_alarm_night')|rejectattr('entity_id','in',active)|map(attribute='entity_id')|list)%} 
+                      {%for triggers in trigger %} 
 
-                      {%for triggers in trigger %}**{{states[triggers].name}}**
-                      DISATTIVATO
-
-                      {%endfor%}
-
+                      **{{states[triggers].name}}** DISATTIVATO {%endfor%}
                       {%-set trigger =
-                      expand('group.list_sensor_alarm_night')|map(attribute='entity_id')|list%}
-                      {% for entity in trigger if entity in
-                      state_attr('sensor.lista_sensori_allarme_notte','sensor_active')%}
-                      **{{states[entity].name}}:**  {{states[entity].state}} 
+                      expand('group.list_sensor_alarm_night')|map(attribute='entity_id')|list%} 
+                      {% for entity in trigger if entity in active%} 
 
+                      **{{states[entity].name}}:**  {{states[entity].state}} 
                       {%endfor%}
