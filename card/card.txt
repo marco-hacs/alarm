@@ -5,7 +5,7 @@ styles:
     - background-color: rgba(0,0,0,0.0)
     - border-width: 0px
     - height: 400px
-  - width: 355px
+    - width: 355px
     - padding: 0px
     - border-radius: 0px
   custom_fields:
